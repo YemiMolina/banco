@@ -1,11 +1,16 @@
 package es.uc3m.tiw.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
+@Entity
+@Table(name="usuario")
 public class Usuario {
 
-	
+	@Id
 	private Integer edad;
 	private String nombre;
 
