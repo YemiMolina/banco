@@ -5,10 +5,12 @@ import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
+import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,19 +41,16 @@ public class PasarelaService {
 
 	@Context
 	private UriInfo context;
+	@PersistenceContext(unitName = "banco-model")
 	private EntityManager em;
+	private UserTransaction ut;
 	private PedidoDAO daoPedido;
 
 	/**
 	 * Default constructor.
 	 */
 	public PasarelaService() {
-		// TODO Auto-generated constructor stub
-	}
 
-	@PostConstruct
-	public void postConstructor() {
-		daoPedido = new PedidoDAO(em);
 	}
 
 	/**
@@ -69,98 +68,85 @@ public class PasarelaService {
 	}
 
 	/**
-	 * Ejemplo en el que se pasan los datos por GET y {@link PathParam}. el
-	 * primer parametro se convierte automaticamente a Integer a pesar de venir
-	 * siempre en formato String mediante HTTP. La URL sera:
-	 * http://localhost:8080/banco-web/resources/pasarela/prueba/10/hola
-	 * 
-	 * @param numero
-	 * @param palabra
-	 * @return mensaje con los datos introducidos
+	 * Se pasan los datos por GET y los parametros se muestran en un XML La URL
+	 * sera:
+	 * http://localhost:8080/banco-web/resources/pasarela/pago/importe/tarjeta/codigoPedido 
+	 * @param importe
+	 * @param numeroTarjeta
+	 * @param codigoPedido
+	 * @return XML
 	 */
 
 	/* Obtenemos los datos mediante get */
 	@GET
-    @Path("pago/{importe}/{tarjeta}/{codigoPedido}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getDatos(@PathParam("importe")double importe,@PathParam("tarjeta")String numeroTarjeta, @PathParam("codigoPedido") String codigoPedido) {
-    	
-    	numeroTarjeta = numeroTarjeta.toUpperCase();
-    	Date fecha= new Date();
-    	String codigoOperacion = "BANCO" +new SimpleDateFormat("yyyyMMddhhssSSSSa").format(fecha);
-    	//if(importe>0 && codigoPedido.length()!=0 && numeroTarjeta.matches("[A|B]+\\{19}")){
-    		//Pedido pedido=new Pedido(importe, numeroTarjeta, codigoPedido, codigoOperacion);
-    		/*try{
-    			daoPedido.guardarPedido(pedido);
-    			return codigoOperacion;
-    		
-    		} catch (SecurityException | IllegalStateException
-					| RollbackException | HeuristicMixedException
-					| HeuristicRollbackException | SystemException
-					| NotSupportedException e) {}
-		} */
-    
-        
-        return "Los datos introducidos son: numero="+importe+" palabra= "+numeroTarjeta+" codigoPedido= "+codigoPedido;
-    }
-
-	
-	@GET
-	@Path("pago/{importe}/{tarjeta}/{codigoPedido}/{codigoVale}")
-	public String validarCompra(@PathParam("importe")double importe, @PathParam("tarjeta")String numeroTarjeta, @PathParam("codigoPedido")String codigoPedido, @PathParam("codigoVale")String codigoVale) {
-		numeroTarjeta = numeroTarjeta.toUpperCase();
-		Date date=new Date();
-		String codOperacion = "BANCO"+ new SimpleDateFormat("yyyyMMddhhssSSSSa").format(date);
-	//	if(importe>0 && codigoPedido.length()!=0 && codigoVale.length()!=0  && numeroTarjeta.matches("[A|B]+\\w{19}")){
-			//Pedido pedido=new Pedido(importe, numeroTarjeta, codigoPedido, codOperacion, codigoVale);
-		/*	try {
-		    	daoPedido = new PedidoDAO(em);
-				daoPedido.guardarPedido(pedido);
-				return codigoOperacion;
-			} catch (SecurityException | IllegalStateException
-					| RollbackException | HeuristicMixedException
-					| HeuristicRollbackException | SystemException
-					| NotSupportedException e) {}
-		}*/
-		return "";
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * Ejemplo de uso de QUERY-STRING. La url sera:
-	 * http://localhost:8080/banco-web
-	 * /resources/pasarela/prueba/query?numero=10&palabra=hola
-	 * 
-	 * @param numero
-	 * @param palabra
-	 * @return mensaje con los datos introducidos
-	 */
-	@GET
-	@Path("prueba/query")
+	@Path("pago/{importe}/{tarjeta}/{codigoPedido}/xml")
+	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getDatosPorQueryString(
-			@QueryParam(value = "numero") Integer numero,
-			@QueryParam(value = "palabra") String palabra) {
-		return "Los datos introducidos por query-string son: numero=" + numero
-				+ " palabra= " + palabra;
+	public String getDatos(@PathParam("importe") double importe,
+			@PathParam("tarjeta") String numeroTarjeta,
+			@PathParam("codigoPedido") String codigoPedido) {
+
+		daoPedido = new PedidoDAO(em, ut);
+
+		numeroTarjeta = numeroTarjeta.toUpperCase();
+		Date fecha = new Date();
+		String codigoOperacion = "BANCO"
+				+ new SimpleDateFormat("yyyyMMddhhssSSSSXXZZ").format(fecha);
+		
+		if (importe > 0 && codigoPedido.length() != 0
+				&& numeroTarjeta.matches("[A|B]+\\{19}")) {
+
+			Pedido pedido = new Pedido(codigoPedido, numeroTarjeta, importe);
+
+			/*
+			 * try{ daoPedido.guardarPedido(pedido); return codigoOperacion;
+			 * 
+			 * } catch (SecurityException | IllegalStateException |
+			 * RollbackException | HeuristicMixedException |
+			 * HeuristicRollbackException | SystemException |
+			 * NotSupportedException e) {} }
+			 */
+
+			return "Los datos introducidos son: numero=" + importe
+					+ " palabra= " + numeroTarjeta + " codigoPedido= "
+					+ codigoPedido;
+		}
+		return codigoOperacion;
+
+	}
+
+	@GET
+	@Path("pago/{importe}/{tarjeta}/{codigoPedido}/{codigoVale}/xml")
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String validarCompra(@PathParam("importe") double importe,
+			@PathParam("tarjeta") String numeroTarjeta,
+			@PathParam("codigoPedido") String codigoPedido,
+			@PathParam("codigoVale") String codigoVale) {
+		
+		daoPedido = new PedidoDAO(em, ut);
+		numeroTarjeta = numeroTarjeta.toUpperCase();
+		Date date = new Date();
+		
+		String codOperacion = "BANCO"
+				+ new SimpleDateFormat("yyyyMMddhhssSSSSXXZZ").format(date);
+		
+		if (importe > 0 && codigoPedido.length() != 0
+				&& codigoVale.length() != 0
+				&& numeroTarjeta.matches("[A|B]+\\w{19}")) {
+			
+			Pedido pedido = new Pedido(importe, numeroTarjeta, codigoPedido,
+					codOperacion, codigoVale);
+			/*
+			 * try { daoPedido = new PedidoDAO(em);
+			 * daoPedido.guardarPedido(pedido); return codigoOperacion; } catch
+			 * (SecurityException | IllegalStateException | RollbackException |
+			 * HeuristicMixedException | HeuristicRollbackException |
+			 * SystemException | NotSupportedException e) {} }
+			 */
+			return "";
+		}
+		return codigoVale;
 	}
 
 	/**
@@ -177,24 +163,6 @@ public class PasarelaService {
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_XML)
 	public Usuario devuelveXML(@PathParam("edad") Integer edad,
-			@PathParam("nombre") String nombre) {
-		return new Usuario(edad, nombre);
-	}
-
-	/**
-	 * Ejemplo en el que se accede por POST mediante un formulario pero se
-	 * devuelve un objeto {@link Usuario} que es convertido a JSON La URL es:
-	 * http://localhost:8080/banco-web/resources/pasarela/usuario/10/david/json
-	 * 
-	 * @param edad
-	 * @param nombre
-	 * @return documento JSON del usuario
-	 */
-	@POST
-	@Path("usuario/{edad}/{nombre}/json")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Usuario devuelveJSON(@PathParam("edad") Integer edad,
 			@PathParam("nombre") String nombre) {
 		return new Usuario(edad, nombre);
 	}

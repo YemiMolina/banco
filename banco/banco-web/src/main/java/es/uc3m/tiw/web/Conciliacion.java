@@ -34,9 +34,9 @@ public class Conciliacion {
      * Retrieves representation of an instance of Conciliacion
      */
 	@GET
-	@Path("proveedor/{anio}/{mes}/{importe}/{idProveedor}")
+	@Path("proveedor/{anio}/{mes}/{importe}/{idAdmin}")
 	@Produces("text/plain")
-	public void conciliacionAdmin(@PathParam("anio")String anio,@PathParam("mes")String mes,@PathParam("importe")double importe, @PathParam("idProveedor")Long idProveedor) {
+	public void conciliacionAdmin(@PathParam("anio")String anio,@PathParam("mes")String mes,@PathParam("importe")double importe, @PathParam("idAdmin")Long idProveedor) {
 		Date date=new Date();
 		String dia = new SimpleDateFormat("dd").format(date);
 		

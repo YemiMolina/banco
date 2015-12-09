@@ -1,8 +1,11 @@
 package es.uc3m.tiw.model;
 
+import java.util.Calendar;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.ws.rs.PathParam;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -14,9 +17,10 @@ public class Pedido {
 	private String codigoPedido;
 	private String numeroTarjeta;
 	private double importe;
+	private String codigoVale;
 
 	public Pedido() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	public Pedido(String codigoPedido, String numeroTarjeta, double importe) {
 		this.codigoPedido = codigoPedido;
@@ -25,6 +29,10 @@ public class Pedido {
 	}
 
 	
+	public Pedido(double importe, String numeroTarjeta, String codigoPedido,
+			String codOperacion, String codigoVale) {
+		// TODO Auto-generated constructor stub
+	}
 	public String getCodigoPedido() {
 		return codigoPedido;
 	}
@@ -50,5 +58,7 @@ public class Pedido {
 		return "Pedido [codigoPedido=" + codigoPedido + ", numeroTarjeta="
 				+ numeroTarjeta + ", importe=" + importe + "]";
 	}
+	 
+	
 
 }
