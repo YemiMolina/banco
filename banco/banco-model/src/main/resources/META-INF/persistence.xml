@@ -4,6 +4,7 @@
 		<jta-data-source>jdbc/banco</jta-data-source>
 		<class>es.uc3m.tiw.model.Usuario</class>
 		<class>es.uc3m.tiw.model.Pedido</class>
+		<class>es.uc3m.tiw.model.ConciliacionProfesor</class>
 		<properties>
 			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
 		</properties>

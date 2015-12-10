@@ -18,7 +18,7 @@ public class ApplicationConfig extends Application {
 		Set<Class<?>> resources = new java.util.HashSet<Class<?>>();
 		
 		resources.add(es.uc3m.tiw.web.PasarelaService.class);
-		resources.add(es.uc3m.tiw.web.Conciliacion.class);
+
 		return resources;    
     }
 }
