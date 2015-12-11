@@ -1,17 +1,7 @@
 package es.uc3m.tiw.web;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -21,12 +11,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-import es.uc3m.tiw.model.ConciliacionEmpresa;
-import es.uc3m.tiw.model.ConciliacionProfesor;
-import es.uc3m.tiw.model.Pedido;
-import es.uc3m.tiw.model.daos.ConciliacionEmpresaDAO;
-import es.uc3m.tiw.model.daos.ConciliacionProfesorDAO;
-import es.uc3m.tiw.model.daos.PedidoDAO;
+import es.uc3m.tiw.ejb.SessionBean;
+
 
 @Path("pasarela")
 @Stateless
@@ -34,162 +20,103 @@ public class PasarelaService {
 
 	@Context
 	private UriInfo context;
-	@PersistenceContext(unitName = "banco-model")
-	private EntityManager em;
-	private UserTransaction ut;
-	private PedidoDAO daoPedido;
-	private ConciliacionProfesorDAO daoCP;
-	private ConciliacionEmpresaDAO daoCE;
-
-	/**
-	 * Default constructor.
-	 */
+	
+	
+	@EJB(name="pedidos")
+	private SessionBean bean;
+	
 	public PasarelaService() {
 
 	}
 
 	/**
-	 * Se invoca por GET la URL:
-	 * http://localhost:8080/banco-web/resources/pasarela/prueba y devuelve
-	 * "Todo OK"
-	 * 
-	 * @return Todo OK
-	 */
-	@GET
-	@Path("prueba")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getText() {
-		return "Todo OK";
-	}
-
-	/**
 	 * Se pasan los datos por GET y los parametros se muestran en un XML La URL
 	 * sera:
-	 * http://localhost:8080/banco-web/resources/pasarela/pago/importe/tarjeta
-	 * /codigoPedido
-	 * 
+	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/12.5/A34567891234567891/ORDER2015121009200020PM/xml
+	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/14/tarjeta/B6789123456723456712/ORDER2015121108200030AM/xml
 	 * @param importe
 	 * @param numeroTarjeta
 	 * @param codigoPedido
 	 * @return XML
 	 */
 
-	/* Obtenemos los datos mediante get */
 	@GET
 	@Path("pagoNormal/{importe}/{tarjeta}/{codigoPedido}/xml")
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getDatos(@PathParam("importe") double importe,
-			@PathParam("tarjeta") String numeroTarjeta,
-			@PathParam("codigoPedido") String codigoPedido) {
+	public String getPagoNormal(@PathParam("tarjeta") String numeroTarjeta,
+			@PathParam("codigoPedido") String codigoPedido,
+			@PathParam("importe") double importe) {
 
-		daoPedido = new PedidoDAO(em, ut);
+		String retorno = "";
 
-		numeroTarjeta = numeroTarjeta.toUpperCase();
-		Date fecha = new Date();
-		String codigoOperacion = "BANCO"
-				+ new SimpleDateFormat("yyyyMMddhhssSSSSXX").format(fecha);
+		retorno = bean.pagoNormal(numeroTarjeta, codigoPedido, importe);
 
-		if (importe > 0 && codigoPedido.length() != 0
-				&& numeroTarjeta.matches("[A|B]+\\{19}")) {
-
-			Pedido pedido = new Pedido(codigoPedido, numeroTarjeta, importe,
-					codigoOperacion);
-
-			try {
-				daoPedido.guardarPedido(pedido);
-			} catch (SecurityException | IllegalStateException
-					| RollbackException | HeuristicMixedException
-					| HeuristicRollbackException | SystemException
-					| NotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			return codigoOperacion;
-		}
-		return "";
+		return retorno;
 
 	}
-
+	
+	/**
+	 * Se pasan los datos por GET y los parametros se muestran en un XML La URL
+	 * sera:
+	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/12.5/A34567891234567891/ORDER2015121009200020PM/VALE/xml
+	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/14/tarjeta/B6789123456723456712/ORDER2015121108200030AM/VALE/xml
+	 * @param importe
+	 * @param numeroTarjeta
+	 * @param codigoPedido
+	 * @param codigoVale
+	 * @return XML
+	 */
+	
 	@GET
 	@Path("pagoVale/{importe}/{tarjeta}/{codigoPedido}/{codigoVale}/xml")
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String validarCompra(@PathParam("importe") double importe,
-			@PathParam("tarjeta") String numeroTarjeta,
+	public String getPagoVale(@PathParam("tarjeta") String numeroTarjeta,
 			@PathParam("codigoPedido") String codigoPedido,
+			@PathParam("importe") double importe,
 			@PathParam("codigoVale") String codigoVale) {
 
-		daoPedido = new PedidoDAO(em, ut);
-		numeroTarjeta = numeroTarjeta.toUpperCase();
-		Date date = new Date();
+		String retorno = "";
 
-		String codigoOperacion = "BANCO"
-				+ new SimpleDateFormat("yyyyMMddhhssSSSSXX").format(date);
+		retorno = bean.pagoVale(numeroTarjeta, codigoPedido, importe,
+				codigoVale);
 
-		if (importe > 0 && codigoPedido.length() != 0
-				&& codigoVale.length() != 0
-				&& numeroTarjeta.matches("[A|B]+\\w{19}")) {
+		return retorno;
 
-			Pedido pedido = new Pedido(codigoPedido, numeroTarjeta, importe,
-					codigoOperacion, codigoVale);
-
-			try {
-				daoPedido.guardarPedido(pedido);
-			} catch (SecurityException | IllegalStateException
-					| RollbackException | HeuristicMixedException
-					| HeuristicRollbackException | SystemException
-					| NotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return codigoOperacion;
-
-		}
-		return "";
 	}
 
-	/* CONCILIACION */
+	// CONCILIACION 
 	@GET
 	@Path("conciliacionProfesor/{anyo}/{mes}/{importe}/{idProfesor}/xml")
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String conciliacionProfesor(@PathParam("anyo") int anyo,
+	public String getConciliacionProfesor(@PathParam("anyo") int anyo,
 			@PathParam("mes") int mes, @PathParam("importe") double importe,
 			@PathParam("idProfesor") Long idProfesor)
-			throws HeuristicMixedException, HeuristicRollbackException,
-			SystemException, NotSupportedException, RollbackException {
+			 {
 
-		ConciliacionProfesor conciliacionProfesor = new ConciliacionProfesor(
-				mes, anyo, importe, idProfesor);
+		
+		String retorno = "";
 
-		try {
-			daoCP.guardarConciliacionProfesor(conciliacionProfesor);
-			return "ok";
-		} catch (SecurityException | IllegalStateException e) {
-		}
-		return "";
+		retorno = bean.conciliacionProfesor(anyo,mes, importe,idProfesor);
+
+		return retorno;
+		
+	
 	}
 
 	@GET
-	@Path("conciliacionEmpresa/{anyo}/{mes}/{importe}/{id}/xml")
+	@Path("conciliacionEmpresa/{anyo}/{mes}/{importe}/xml")
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String conciliacionEmpresa(@PathParam("anyo") int anyo,
-			@PathParam("mes") int mes, @PathParam("importe") double importe,
-			@PathParam("id") long id) throws HeuristicMixedException,
-			HeuristicRollbackException, SystemException, NotSupportedException,
-			RollbackException {
-		ConciliacionEmpresa conciliacionEmpresa = new ConciliacionEmpresa(id,
-				mes, anyo, (importe * 0.99));
+	public String getConciliacionEmpresa(@PathParam("anyo") int anyo,
+			@PathParam("mes") int mes, @PathParam("importe") double importe) {
+		String retorno = "";
 
-		try {
-			daoCE.guardarConciliacionEmpresa(conciliacionEmpresa);
-			return "ok";
-		} catch (SecurityException | IllegalStateException e) {
-		}
-		return "";
-	}
+		retorno = bean.conciliacionEmpresa(anyo,mes, importe);
 
+		return retorno;
+
+}
 }

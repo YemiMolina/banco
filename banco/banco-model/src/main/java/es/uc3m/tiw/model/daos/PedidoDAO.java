@@ -22,12 +22,18 @@ public class PedidoDAO implements IPedido {
 		
 	}
 
+	public PedidoDAO(EntityManager em2) {
+		em = em2;
+		// TODO Auto-generated constructor stub
+	}
+
 	//@Override
 	public Pedido guardarPedido(Pedido pedido) throws SecurityException, IllegalStateException, RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException, NotSupportedException{
 		
-		ut.begin();
+		//ut.begin();
+		
 		em.persist(pedido);
-		ut.commit();
+		//ut.commit();
 		return pedido;
 	}
 	//@Override
