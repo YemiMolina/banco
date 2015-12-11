@@ -56,35 +56,6 @@ public class PasarelaService {
 
 	}
 	
-	/**
-	 * Se pasan los datos por GET y los parametros se muestran en un XML La URL
-	 * sera:
-	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/12.5/A34567891234567891/ORDER2015121009200020PM/VALE/xml
-	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/14/tarjeta/B6789123456723456712/ORDER2015121108200030AM/VALE/xml
-	 * @param importe
-	 * @param numeroTarjeta
-	 * @param codigoPedido
-	 * @param codigoVale
-	 * @return XML
-	 */
-	
-	@GET
-	@Path("pagoVale/{importe}/{tarjeta}/{codigoPedido}/{codigoVale}/xml")
-	@Consumes(MediaType.TEXT_PLAIN)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getPagoVale(@PathParam("tarjeta") String numeroTarjeta,
-			@PathParam("codigoPedido") String codigoPedido,
-			@PathParam("importe") double importe,
-			@PathParam("codigoVale") String codigoVale) {
-
-		String retorno = "";
-
-		retorno = bean.pagoVale(numeroTarjeta, codigoPedido, importe,
-				codigoVale);
-
-		return retorno;
-
-	}
 
 	// CONCILIACION 
 	@GET

@@ -15,7 +15,7 @@ public class Pedido {
 	private String numeroTarjeta;
 	private double importe;
 	private String codigoOperacion;
-	private String codigoVale;
+
 
 	public Pedido() {
 		super();
@@ -24,26 +24,14 @@ public class Pedido {
 	
 	
 	public Pedido(String codigoPedido, String numeroTarjeta, double importe,
-			String codigoOperacion, String codigoVale) {
-		super();
-		this.codigoPedido = codigoPedido;
-		this.numeroTarjeta = numeroTarjeta;
-		this.importe = importe;
-		this.codigoOperacion = codigoOperacion;
-		this.codigoVale = codigoVale;
-	}
-
-
-
-	public Pedido(String codigoPedido, String numeroTarjeta, double importe,
 			String codigoOperacion) {
 		super();
 		this.codigoPedido = codigoPedido;
 		this.numeroTarjeta = numeroTarjeta;
 		this.importe = importe;
 		this.codigoOperacion = codigoOperacion;
+	
 	}
-
 
 
 	public String getCodigoPedido() {
@@ -90,18 +78,6 @@ public class Pedido {
 
 	public void setCodigoOperacion(String codigoOperacion) {
 		this.codigoOperacion = codigoOperacion;
-	}
-
-
-
-	public String getCodigoVale() {
-		return codigoVale;
-	}
-
-
-
-	public void setCodigoVale(String codigoVale) {
-		this.codigoVale = codigoVale;
 	}
 
 

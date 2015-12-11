@@ -73,38 +73,6 @@ public class SessionBean implements SessionBeanLocal {
     }
     
     
-    public String pagoVale(String numeroTarjeta, String codigoPedido, double importe,String codigoVale){
-    	
-    	daoPedido = new PedidoDAO(em);
-		numeroTarjeta = numeroTarjeta.toUpperCase();
-		Date date = new Date();
-
-		String codigoOperacion = "BANCO"
-				+ new SimpleDateFormat("yyyyMMddhhssSSSSa").format(date);
-
-		if (importe > 0 && codigoPedido.length() != 0
-				&& codigoVale.length() != 0
-				&& numeroTarjeta.matches("[A|B]+\\w{19}")) {
-
-			Pedido pedido = new Pedido(numeroTarjeta,codigoPedido, importe,
-					 codigoVale,codigoOperacion);
-
-			try {
-				daoPedido.guardarPedido(pedido);
-			} catch (SecurityException | IllegalStateException
-					| RollbackException | HeuristicMixedException
-					| HeuristicRollbackException | SystemException
-					| NotSupportedException e) {
-
-				e.printStackTrace();
-			}
-			return codigoOperacion;
-
-		}
-		return "";
-  
-    	
-    }
     
     public String conciliacionProfesor(int mes,int anyo,double importe,long idProfesor){
     	
