@@ -1,6 +1,9 @@
 package es.uc3m.tiw.model;
 
+import static javax.persistence.GenerationType.AUTO;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 
@@ -9,10 +12,10 @@ public class ConciliacionProfesor {
 
 
 	@Id
-
+	@GeneratedValue(strategy = AUTO)
 	private long idProfesor;
-	private int mes;
 	private int anyo;
+	private int mes;
 	private double importe;
 
 	
@@ -20,13 +23,12 @@ public class ConciliacionProfesor {
 		super();
 	}
 
-	public ConciliacionProfesor( int mes, int anyo,
-			double importe, long idProfesor) {
+	public ConciliacionProfesor(int anyo, int mes,
+			double importe,long idProfesor) {
 		super();
 	
-	
-		this.mes = mes;
 		this.anyo = anyo;
+		this.mes = mes;
 		this.importe = importe;
 		this.idProfesor = idProfesor;
 	}

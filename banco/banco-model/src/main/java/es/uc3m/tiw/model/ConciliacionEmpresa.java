@@ -12,8 +12,8 @@ public class ConciliacionEmpresa{
 	@Id
 	@GeneratedValue(strategy = AUTO)
 	private long idEmpresa;
-	private int mes;
 	private int anyo;
+	private int mes;
 	private double importe;
 	
 	
@@ -22,19 +22,16 @@ public class ConciliacionEmpresa{
 	}
 
 
-	public ConciliacionEmpresa(long idEmpresa,int mes, int anyo,
-			double importe) {
+	public ConciliacionEmpresa(long idEmpresa,int anyo
+			,int mes,double importe) {
 		super();
 		
 		this.idEmpresa=idEmpresa;
-		this.mes = mes;
 		this.anyo = anyo;
+		this.mes = mes;
 		this.importe = importe;
 	
 	}
-
-
-
 
 	public int getMes() {
 		return mes;

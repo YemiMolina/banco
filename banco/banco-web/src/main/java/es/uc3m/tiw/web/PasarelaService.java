@@ -33,7 +33,7 @@ public class PasarelaService {
 	 * Se pasan los datos por GET y los parametros se muestran en un XML La URL
 	 * sera:
 	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/12.5/A34567891234567891/ORDER2015121009200020PM/xml
-	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/14/tarjeta/B6789123456723456712/ORDER2015121108200030AM/xml
+	 * http://localhost:8080/banco-web/resources/pasarela/pagoNormal/14/B6789123456723456712/ORDER2015121108200030AM/xml
 	 * @param importe
 	 * @param numeroTarjeta
 	 * @param codigoPedido
@@ -64,7 +64,7 @@ public class PasarelaService {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getConciliacionProfesor(@PathParam("anyo") int anyo,
 			@PathParam("mes") int mes, @PathParam("importe") double importe,
-			@PathParam("idProfesor") Long idProfesor)
+			@PathParam("idProfesor") long idProfesor)
 			 {
 
 		
