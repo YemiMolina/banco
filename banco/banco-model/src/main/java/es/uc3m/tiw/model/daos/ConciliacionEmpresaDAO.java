@@ -14,21 +14,21 @@ import es.uc3m.tiw.model.ConciliacionEmpresa;
 public class ConciliacionEmpresaDAO {
 
 	EntityManager em;
-	UserTransaction ut;
+	//UserTransaction ut;
 
-	public ConciliacionEmpresaDAO(EntityManager em, UserTransaction ut){
+	public ConciliacionEmpresaDAO(EntityManager em){
 		
 		this.em=em;
-		this.ut= ut;
+		//this.ut= ut;
 		
 	}
 
 	//@Override
 	public ConciliacionEmpresa guardarConciliacionEmpresa(ConciliacionEmpresa conciliacionEmpresa) throws SecurityException, IllegalStateException, RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException, NotSupportedException{
 		
-		ut.begin();
+	//	ut.begin();
 		em.persist(conciliacionEmpresa);
-		ut.commit();
+	//	ut.commit();
 		return conciliacionEmpresa;
 	}
 	

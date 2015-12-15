@@ -76,8 +76,11 @@ public class SessionBean implements SessionBeanLocal {
     
     public String conciliacionProfesor(int mes,int anyo,double importe,long idProfesor){
     	
+    	daoCP = new ConciliacionProfesorDAO(em);
+    	
     	ConciliacionProfesor conciliacionProfesor = new ConciliacionProfesor(
 				mes, anyo, importe, idProfesor);
+    	System.out.println("FUNCIONA");
 
 		{
 			try {
@@ -94,10 +97,11 @@ public class SessionBean implements SessionBeanLocal {
     }
     
     
-    public String conciliacionEmpresa(int anyo,int mes,double importe){
+    public String conciliacionEmpresa(long idEmpresa,int anyo,int mes,double importe){
     	
-    	ConciliacionEmpresa conciliacionEmpresa = new ConciliacionEmpresa(
-				mes, anyo, (importe * 0.99));
+      	daoCE = new ConciliacionEmpresaDAO(em);
+    	ConciliacionEmpresa conciliacionEmpresa = new ConciliacionEmpresa(idEmpresa,anyo,mes, (importe * 0.99));
+    	System.out.println("FUNCIONA");
 
 		 {
 			try {
@@ -112,6 +116,8 @@ public class SessionBean implements SessionBeanLocal {
 			return "ok";
 		}
 	}
+
+
     	
     }
     

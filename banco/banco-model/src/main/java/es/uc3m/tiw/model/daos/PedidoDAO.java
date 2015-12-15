@@ -1,5 +1,7 @@
 package es.uc3m.tiw.model.daos;
 
+import java.sql.SQLException;
+
 import javax.persistence.EntityManager;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -24,10 +26,10 @@ public class PedidoDAO implements IPedido {
 
 	public PedidoDAO(EntityManager em2) {
 		em = em2;
-		// TODO Auto-generated constructor stub
+	
 	}
 
-	//@Override
+
 	public Pedido guardarPedido(Pedido pedido) throws SecurityException, IllegalStateException, RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException, NotSupportedException{
 		
 		//ut.begin();
@@ -36,14 +38,16 @@ public class PedidoDAO implements IPedido {
 		//ut.commit();
 		return pedido;
 	}
-	//@Override
+
 	public Pedido buscarPedido(Long codigoPedido){
 		return em.find(Pedido.class, codigoPedido);
 	}
+
 	@Override
-	public void Pedido(Long id) {
+	public void Pedido(Long codigoPedido) throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
+
 	
 }

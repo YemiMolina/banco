@@ -17,7 +17,7 @@ public interface IPedido {
 
 	public abstract Pedido guardarPedido(Pedido pedido)throws SecurityException, IllegalStateException, RollbackException, HeuristicMixedException, HeuristicRollbackException, SystemException, NotSupportedException;
 	
-	public abstract void Pedido (Long id)throws SQLException;
+	public abstract void Pedido (Long codigoPedido)throws SQLException;
 	
 	
 }

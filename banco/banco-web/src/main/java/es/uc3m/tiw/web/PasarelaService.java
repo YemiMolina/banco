@@ -78,14 +78,14 @@ public class PasarelaService {
 	}
 
 	@GET
-	@Path("conciliacionEmpresa/{anyo}/{mes}/{importe}/xml")
+	@Path("conciliacionEmpresa/{anyo}/{mes}/{importe}/{idEmpresa}/xml")
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getConciliacionEmpresa(@PathParam("anyo") int anyo,
-			@PathParam("mes") int mes, @PathParam("importe") double importe) {
+			@PathParam("mes") int mes, @PathParam("importe") double importe, @PathParam("idEmpresa") long idEmpresa) {
 		String retorno = "";
 
-		retorno = bean.conciliacionEmpresa(anyo,mes, importe);
+		retorno = bean.conciliacionEmpresa(idEmpresa,anyo,mes, importe);
 
 		return retorno;
 
